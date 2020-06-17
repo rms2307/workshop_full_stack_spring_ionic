@@ -13,10 +13,10 @@ import com.rms2307.ecommerce.services.CategoriaService;
 @RestController
 @RequestMapping(value = "/categorias")
 public class CategoriaResource {
-	
+
 	@Autowired
 	private CategoriaService service;
-	
+
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Categoria> buscar(@PathVariable Integer id) {
 		Categoria obj = service.bucarPorId(id);
