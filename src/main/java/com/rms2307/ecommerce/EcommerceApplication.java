@@ -13,6 +13,7 @@ import com.rms2307.ecommerce.domain.Cidade;
 import com.rms2307.ecommerce.domain.Cliente;
 import com.rms2307.ecommerce.domain.Endereco;
 import com.rms2307.ecommerce.domain.Estado;
+import com.rms2307.ecommerce.domain.ItemPedido;
 import com.rms2307.ecommerce.domain.Pagamento;
 import com.rms2307.ecommerce.domain.PagamentoComBoleto;
 import com.rms2307.ecommerce.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import com.rms2307.ecommerce.repositories.CidadeRepository;
 import com.rms2307.ecommerce.repositories.ClienteRepository;
 import com.rms2307.ecommerce.repositories.EnderecoRepository;
 import com.rms2307.ecommerce.repositories.EstadoRepository;
+import com.rms2307.ecommerce.repositories.ItemPedidoRepository;
 import com.rms2307.ecommerce.repositories.PagamentoRepository;
 import com.rms2307.ecommerce.repositories.PedidoRepository;
 import com.rms2307.ecommerce.repositories.ProdutoRepository;
@@ -55,6 +57,9 @@ public class EcommerceApplication implements CommandLineRunner {
 
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(EcommerceApplication.class, args);
@@ -126,7 +131,19 @@ public class EcommerceApplication implements CommandLineRunner {
 
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
-
+		
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p2, 0.00, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p3, 100.00, 1, 2000.00);
+		
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+		
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+		
+		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
 	}
 
 }
