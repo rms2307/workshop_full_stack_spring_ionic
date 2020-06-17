@@ -9,10 +9,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.rms2307.ecommerce.domain.Categoria;
 import com.rms2307.ecommerce.domain.Cidade;
+import com.rms2307.ecommerce.domain.Cliente;
+import com.rms2307.ecommerce.domain.Endereco;
 import com.rms2307.ecommerce.domain.Estado;
 import com.rms2307.ecommerce.domain.Produto;
+import com.rms2307.ecommerce.domain.enums.TipoCliente;
 import com.rms2307.ecommerce.repositories.CategoriaRepository;
 import com.rms2307.ecommerce.repositories.CidadeRepository;
+import com.rms2307.ecommerce.repositories.ClienteRepository;
+import com.rms2307.ecommerce.repositories.EnderecoRepository;
 import com.rms2307.ecommerce.repositories.EstadoRepository;
 import com.rms2307.ecommerce.repositories.ProdutoRepository;
 
@@ -30,6 +35,12 @@ public class EcommerceApplication implements CommandLineRunner {
 
 	@Autowired
 	private EstadoRepository estadoRepository;
+
+	@Autowired
+	private EnderecoRepository enderecoRepository;
+
+	@Autowired
+	private ClienteRepository clienteRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(EcommerceApplication.class, args);
@@ -67,9 +78,23 @@ public class EcommerceApplication implements CommandLineRunner {
 		est2.getCidades().addAll(Arrays.asList(c2, c3));
 
 		estadoRepository.saveAll(Arrays.asList(est1, est2));
-
 		cidadeRepository.saveAll(Arrays.asList(c1, c2, c3, c4));
 
+		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@email.com", "36378912377", TipoCliente.PESSOAFISICA);
+		cli1.getTelefones().addAll(Arrays.asList("12341234", "4567845678"));
+		Cliente cli2 = new Cliente(null, "Jose Silva", "jose@email.com", "19078912459", TipoCliente.PESSOAFISICA);
+		cli2.getTelefones().addAll(Arrays.asList("45991100", "954338797"));
+
+		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 303", "Jardim", "09234904", cli1, c1);
+		Endereco e2 = new Endereco(null, "Avenida Mattos", "105", "Sala 800", "Centro", "12334904", cli1, c2);
+		Endereco e3 = new Endereco(null, "Avenida Barros", "1009", "Casa 01", "Jardim Ana", "09440392", cli2, c2);
+
+		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
+		cli2.getEnderecos().addAll(Arrays.asList(e3));
+
+		clienteRepository.saveAll(Arrays.asList(cli1, cli2));
+
+		enderecoRepository.saveAll(Arrays.asList(e1, e2, e3));
 	}
 
 }
