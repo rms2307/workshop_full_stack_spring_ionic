@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.rms2307.ecommerce.domain.Categoria;
+import com.rms2307.ecommerce.dto.CategoriaDTO;
 import com.rms2307.ecommerce.repositories.CategoriaRepository;
 import com.rms2307.ecommerce.services.exceptions.DataIntegrityException;
 import com.rms2307.ecommerce.services.exceptions.ObjectNotFoundException;
@@ -55,4 +56,9 @@ public class CategoriaService {
 			throw new DataIntegrityException("Categoria com produtos");
 		}
 	}
+	
+	public Categoria fromDTO(CategoriaDTO objDTO) {
+		return new Categoria(objDTO.getId(), objDTO.getNome());
+	}
+	
 }
