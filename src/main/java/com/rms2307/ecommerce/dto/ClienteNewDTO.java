@@ -2,21 +2,45 @@ package com.rms2307.ecommerce.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.rms2307.ecommerce.services.validation.ClienteInsert;
+
+@ClienteInsert
 public class ClienteNewDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	@NotEmpty(message = "Campo Obrigatório")
+	@Length(min = 5, max = 120, message = "Min. 5, Max. 120")
 	private String nome;
+	
+	@NotEmpty(message = "Campo Obrigatório")
+	@Email(message = "Email inválido")
 	private String email;
+	
+	@NotEmpty(message = "Campo Obrigatório")
 	private String cpfOuCnpj;
+	
 	private Integer tipo;
 	
+	@NotEmpty(message = "Campo Obrigatório")
 	private String logradouro;
+	
+	@NotEmpty(message = "Campo Obrigatório")
 	private String numero;
+	
 	private String complemento;
 	private String bairro;
+	
+	@NotEmpty(message = "Campo Obrigatório")
 	private String cep;
 	
+	@NotEmpty(message = "Campo Obrigatório")
 	private String telefone1;
+	
 	private String telefone2;
 	private String telefone3;
 

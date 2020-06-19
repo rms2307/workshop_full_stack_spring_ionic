@@ -71,7 +71,7 @@ public class ClienteService {
 		try {
 			repo.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException("O Cliente " + obj.getNome() + "contém pedidos." );
+			throw new DataIntegrityException("O Cliente " + obj.getNome() + " contém pedidos." );
 		}
 	}
 
