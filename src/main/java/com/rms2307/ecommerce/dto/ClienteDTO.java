@@ -8,7 +8,9 @@ import javax.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Length;
 
 import com.rms2307.ecommerce.domain.Cliente;
+import com.rms2307.ecommerce.services.validation.ClienteUpdate;
 
+@ClienteUpdate //Anotação customizada
 public class ClienteDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
