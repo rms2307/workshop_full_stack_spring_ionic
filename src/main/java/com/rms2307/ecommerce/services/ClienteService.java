@@ -67,11 +67,11 @@ public class ClienteService {
 	}
 
 	public void delete(Integer id) {
-		findById(id);
+		Cliente obj = findById(id);
 		try {
 			repo.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException("Cliente com pedidos");
+			throw new DataIntegrityException("O Cliente " + obj.getNome() + "contém pedidos." );
 		}
 	}
 
