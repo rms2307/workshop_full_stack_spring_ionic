@@ -43,7 +43,6 @@ public class CategoriaResource {
 			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
 			@RequestParam(value = "orderBy", defaultValue = "nome") String orderBy,
 			@RequestParam(value = "direction", defaultValue = "ASC") String direction) {
-		
 		Page<Categoria> pages = service.findPage(page, linesPerPage, orderBy, direction);
 		Page<CategoriaDTO> pagesDTO = pages.map(obj -> new CategoriaDTO(obj));
 		return ResponseEntity.ok().body(pagesDTO);
