@@ -20,6 +20,7 @@ import com.rms2307.ecommerce.domain.PagamentoComCartao;
 import com.rms2307.ecommerce.domain.Pedido;
 import com.rms2307.ecommerce.domain.Produto;
 import com.rms2307.ecommerce.domain.enums.EstadoPagamento;
+import com.rms2307.ecommerce.domain.enums.Perfil;
 import com.rms2307.ecommerce.domain.enums.TipoCliente;
 import com.rms2307.ecommerce.repositories.CategoriaRepository;
 import com.rms2307.ecommerce.repositories.CidadeRepository;
@@ -129,9 +130,10 @@ public class DBService {
 		estadoRepository.saveAll(Arrays.asList(est1, est2));
 		cidadeRepository.saveAll(Arrays.asList(c1, c2, c3, c4));
 
-		Cliente cli1 = new Cliente(null, "Maria Silva", "rms.app.teste@gmail.com", "36378912377", TipoCliente.PESSOAFISICA, pe.encode("123"));
+		Cliente cli1 = new Cliente(null, "Maria Silva", "moraes_rsilv@hotmail.com", "36378912377", TipoCliente.PESSOAFISICA, pe.encode("123"));
 		cli1.getTelefones().addAll(Arrays.asList("12341234", "4567845678"));
-		Cliente cli2 = new Cliente(null, "Jose Silva", "jose@gmail.com", "19078912459", TipoCliente.PESSOAFISICA, pe.encode("123"));
+		Cliente cli2 = new Cliente(null, "Ana Costa", "rms.app.teste@gmail.com", "31628382740", TipoCliente.PESSOAFISICA, pe.encode("123"));
+		cli2.addPerfil(Perfil.ADMIN);
 		cli2.getTelefones().addAll(Arrays.asList("45991100", "954338797"));
 
 		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 303", "Jardim", "09234904", cli1, c1);
