@@ -153,7 +153,7 @@ public class Pedido implements Serializable {
 		builder.append("\nDetalhes:\n");
 		int i = 1;
 		for (ItemPedido ip : getItens()) {
-			builder.append("Item " + i + ": -> " + ip.toString());
+			builder.append("Item " + i + ": = " + ip.toString());
 			i++;
 		}
 		builder.append("Valor Total: ");
