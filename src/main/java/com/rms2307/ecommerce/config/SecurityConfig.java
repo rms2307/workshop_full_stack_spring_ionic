@@ -19,6 +19,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.rms2307.ecommerce.security.JWTAuthenticationFilter;
+import com.rms2307.ecommerce.security.JWTAuthorizationFilter;
 import com.rms2307.ecommerce.security.JWTUtil;
 
 @Configuration
@@ -47,7 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.cors().and().csrf().disable();
 		http.authorizeRequests().antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()// Permite apenas leitura(GET)
 				.antMatchers(PUBLIC_MATCHERS).permitAll().anyRequest().authenticated();// Permite acesso total
-		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil)); //Registro do filtro
+		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil)); // Registro do filtro de autenticação
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));// Registo do filtro de autorização
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 	

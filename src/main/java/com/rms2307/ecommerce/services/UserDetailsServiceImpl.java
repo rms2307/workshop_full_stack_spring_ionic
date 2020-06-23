@@ -12,13 +12,13 @@ import com.rms2307.ecommerce.security.UserSS;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-	
+
 	@Autowired
 	private ClienteRepository repo;
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		Cliente cli =  repo.findByEmail(email);
+		Cliente cli = repo.findByEmail(email);
 		if (cli == null) {
 			throw new UsernameNotFoundException(email);
 		}
