@@ -16,17 +16,20 @@ import org.springframework.stereotype.Service;
 import com.rms2307.ecommerce.domain.Cidade;
 import com.rms2307.ecommerce.domain.Cliente;
 import com.rms2307.ecommerce.domain.Endereco;
+import com.rms2307.ecommerce.domain.enums.Perfil;
 import com.rms2307.ecommerce.domain.enums.TipoCliente;
 import com.rms2307.ecommerce.dto.ClienteDTO;
 import com.rms2307.ecommerce.dto.ClienteNewDTO;
 import com.rms2307.ecommerce.repositories.ClienteRepository;
 import com.rms2307.ecommerce.repositories.EnderecoRepository;
+import com.rms2307.ecommerce.security.UserSS;
+import com.rms2307.ecommerce.services.exceptions.AuthorizationException;
 import com.rms2307.ecommerce.services.exceptions.DataIntegrityException;
 import com.rms2307.ecommerce.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class ClienteService {
-	
+
 	@Autowired
 	BCryptPasswordEncoder pe;
 
@@ -37,12 +40,26 @@ public class ClienteService {
 	private EnderecoRepository enderecoRepository;
 
 	public Cliente findById(Integer id) {
+
+		// Verifica se é um usuario ADMIN, ou se o cliente buscado é o mesmo do usuario
+		// logado.
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
 	}
 
 	public List<Cliente> findAll() {
+		
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Perfil.ADMIN)) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		
 		return repo.findAll();
 	}
 
@@ -75,7 +92,7 @@ public class ClienteService {
 		try {
 			repo.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException("O Cliente " + obj.getNome() + " contém pedidos." );
+			throw new DataIntegrityException("O Cliente " + obj.getNome() + " contém pedidos.");
 		}
 	}
 

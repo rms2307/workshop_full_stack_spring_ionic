@@ -39,7 +39,6 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(obj);
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping
 	public ResponseEntity<List<ClienteDTO>> findAll() {
 		List<Cliente> list = service.findAll();
