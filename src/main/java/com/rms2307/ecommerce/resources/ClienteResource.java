@@ -39,13 +39,14 @@ public class ClienteResource {
 		Cliente obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
-
+//==================================================
 	@GetMapping
 	public ResponseEntity<List<ClienteDTO>> findAll() {
 		List<Cliente> list = service.findAll();
 		List<ClienteDTO> listDTO = list.stream().map(obj -> new ClienteDTO(obj)).collect(Collectors.toList());
 		return ResponseEntity.ok().body(listDTO);
 	}
+//====================================================
 
 	@GetMapping(value = "/email")
 	public ResponseEntity<Cliente> findByEmail(@RequestParam(value = "value") String email) {
