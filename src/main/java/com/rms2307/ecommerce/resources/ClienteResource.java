@@ -47,13 +47,18 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(listDTO);
 	}
 
+	@GetMapping(value = "/email")
+	public ResponseEntity<Cliente> findByEmail(@RequestParam(value = "value") String email) {
+		Cliente obj = service.findByEmail(email);
+		return ResponseEntity.ok().body(obj);
+	}
+
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping(value = "/page")
 	public ResponseEntity<Page<ClienteDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
 			@RequestParam(value = "orderBy", defaultValue = "nome") String orderBy,
 			@RequestParam(value = "direction", defaultValue = "ASC") String direction) {
-
 		Page<Cliente> pages = service.findPage(page, linesPerPage, orderBy, direction);
 		Page<ClienteDTO> pagesDTO = pages.map(obj -> new ClienteDTO(obj));
 		return ResponseEntity.ok().body(pagesDTO);
