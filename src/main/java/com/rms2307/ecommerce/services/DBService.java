@@ -67,14 +67,14 @@ public class DBService {
 
 	public void instantiateTestDatabase() throws ParseException {
 
-		Categoria cat1 = new Categoria(null, "Informática");
-		Categoria cat2 = new Categoria(null, "Escritorio");
-		Categoria cat3 = new Categoria(null, "Cama Mesa e Banho");
-		Categoria cat4 = new Categoria(null, "Eletrônicos");
-		Categoria cat5 = new Categoria(null, "Perfumaria");
-		Categoria cat6 = new Categoria(null, "Jardim");
-		Categoria cat7 = new Categoria(null, "Decoração");
-		Categoria cat8 = new Categoria(null, "Vestuario");
+		Categoria cat1 = new Categoria(null, "Sementes");
+		Categoria cat2 = new Categoria(null, "Temperos/Ervas");
+		Categoria cat3 = new Categoria(null, "Amêndoas/Castanhas");
+		Categoria cat4 = new Categoria(null, "Folhagem");
+		Categoria cat5 = new Categoria(null, "Mercearia");
+		Categoria cat6 = new Categoria(null, "Frutas");
+		Categoria cat7 = new Categoria(null, "Legumes");
+		Categoria cat8 = new Categoria(null, "Frutas Secas");
 
 		Produto p1 = new Produto(null, "Computador", 2000.00);
 		Produto p2 = new Produto(null, "Impressora", 800.00);
@@ -218,10 +218,10 @@ public class DBService {
 		cidadeRepository.saveAll(Arrays.asList(c1, c2, c3, c4));
 
 		Cliente cli1 = new Cliente(null, "Maria Silva", "moraes_rsilv@hotmail.com", "36378912377",
-				TipoCliente.PESSOAFISICA, pe.encode("123"));
+				TipoCliente.PESSOAFISICA, pe.encode("@Feras"));
 		cli1.getTelefones().addAll(Arrays.asList("12341234", "4567845678"));
 		Cliente cli2 = new Cliente(null, "Ana Costa", "rms.app.teste@gmail.com", "31628382740",
-				TipoCliente.PESSOAFISICA, pe.encode("123"));
+				TipoCliente.PESSOAFISICA, pe.encode("@Feras"));
 		cli2.addPerfil(Perfil.ADMIN);
 		cli2.getTelefones().addAll(Arrays.asList("45991100", "954338797"));
 
