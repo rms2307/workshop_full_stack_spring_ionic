@@ -1,15 +1,15 @@
 package com.rms2307.ecommerce.services;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
-
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rms2307.ecommerce.domain.Cliente;
 import com.rms2307.ecommerce.domain.ItemPedido;
@@ -48,9 +48,22 @@ public class PedidoService {
 	private ItemPedidoRepository itemPedidoRepository;
 
 	public Pedido findById(Integer id) {
+		UserSS user = UserService.authenticated();
+		if (user == null ) {
+			throw new AuthorizationException("Acesso negado");
+		}
 		Optional<Pedido> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Pedido.class.getName()));
+	}
+	
+	public List<Pedido> findAll() {
+		UserSS user = UserService.authenticated();
+		if (user == null) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		Cliente cliente = clienteService.findById(user.getId());
+		return repo.findByCliente(cliente);
 	}
 
 	@Transactional

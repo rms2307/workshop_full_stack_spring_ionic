@@ -1,5 +1,7 @@
 package com.rms2307.ecommerce.repositories;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
@@ -15,5 +17,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
 
 	@Transactional
 	Page<Pedido> findByCliente(Cliente cliente, Pageable pageRequest);
+	
+	@Transactional
+	List<Pedido> findByCliente(Cliente cliente);
 
 }

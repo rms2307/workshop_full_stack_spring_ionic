@@ -25,7 +25,7 @@ public class ProdutoService {
 
 	@Autowired
 	private CategoriaRepository categoriaRepository;
-
+	
 	public List<Produto> findAll() {
 		return repo.findAll();
 	}
@@ -41,9 +41,13 @@ public class ProdutoService {
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Produto.class.getName()));
 	}
 
+	
 	public Produto insert(Produto obj) {
 		obj.setId(null);
-		return repo.save(obj);
+		obj = repo.save(obj);
+		System.out.println("============="+obj.getCategorias());
+		
+		return obj;
 	}
 
 	public Produto update(Produto obj) {

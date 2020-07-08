@@ -11,26 +11,25 @@ import com.rms2307.ecommerce.domain.Cliente;
 import com.rms2307.ecommerce.services.validation.ClienteUpdate;
 
 @ClienteUpdate //Anotação customizada
-public class ClienteDTO implements Serializable {
+public class ClienteUpdateDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
 	
 	@NotEmpty(message = "Campo Obrigatório")
-	@Length(min = 5, max = 120, message = "Min. 5, Max. 120")
+	@Length(min = 1, max = 120, message = "Min. 1, Max. 120")
 	private String nome;
 	
 	@NotEmpty(message = "Campo Obrigatório")
 	@Email(message = "Email inválido")
 	private String email;
 	
-	@NotEmpty(message = "Campo Obrigatório")
 	private String telefone;
-
-	public ClienteDTO() {
+	
+	public ClienteUpdateDTO() {
 	}
 
-	public ClienteDTO(Cliente obj) {
+	public ClienteUpdateDTO(Cliente obj) {
 		id = obj.getId();
 		nome = obj.getNome();
 		email = obj.getEmail();
@@ -68,4 +67,7 @@ public class ClienteDTO implements Serializable {
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
+
+	
+	
 }

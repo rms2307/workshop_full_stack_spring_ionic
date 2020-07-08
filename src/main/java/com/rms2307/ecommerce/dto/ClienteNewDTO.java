@@ -12,43 +12,40 @@ import com.rms2307.ecommerce.services.validation.ClienteInsert;
 @ClienteInsert
 public class ClienteNewDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@NotEmpty(message = "Campo Obrigatório")
 	@Length(min = 5, max = 120, message = "Min. 5, Max. 120")
 	private String nome;
-	
+
 	@NotEmpty(message = "Campo Obrigatório")
 	@Email(message = "Email inválido")
 	private String email;
-	
+
 	@NotEmpty(message = "Campo Obrigatório")
 	private String cpfOuCnpj;
-	
+
 	private Integer tipo;
-	
+
 	@NotEmpty(message = "Campo Obrigatório")
 	private String senha;
-	
+
 	@NotEmpty(message = "Campo Obrigatório")
 	private String logradouro;
-	
+
 	@NotEmpty(message = "Campo Obrigatório")
 	private String numero;
-	
+
 	private String complemento;
 	private String bairro;
-	
+
 	@NotEmpty(message = "Campo Obrigatório")
 	private String cep;
-	
+
 	@NotEmpty(message = "Campo Obrigatório")
-	private String telefone1;
-	
-	private String telefone2;
-	private String telefone3;
+	private String telefone;
 
 	private Integer cidadeId;
-	
+
 	public ClienteNewDTO() {
 	}
 
@@ -124,28 +121,12 @@ public class ClienteNewDTO implements Serializable {
 		this.cep = cep;
 	}
 
-	public String getTelefone1() {
-		return telefone1;
+	public String getTelefone() {
+		return telefone;
 	}
 
-	public void setTelefone1(String telefone1) {
-		this.telefone1 = telefone1;
-	}
-
-	public String getTelefone2() {
-		return telefone2;
-	}
-
-	public void setTelefone2(String telefone2) {
-		this.telefone2 = telefone2;
-	}
-
-	public String getTelefone3() {
-		return telefone3;
-	}
-
-	public void setTelefone3(String telefone3) {
-		this.telefone3 = telefone3;
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
 
 	public Integer getCidadeId() {
@@ -162,5 +143,5 @@ public class ClienteNewDTO implements Serializable {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
-	}		
+	}
 }

@@ -30,37 +30,36 @@ public class Cliente implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
-	
+
 	@Column(unique = true)
 	private String email;
 	private String cpfOuCnpj;
 	private Integer tipo;
-	
+
 	@JsonIgnore
 	private String senha;
 
 	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
 	private List<Endereco> enderecos = new ArrayList<>();
 
-	@ElementCollection
-	@CollectionTable(name = "TELEFONES")
-	private Set<String> telefones = new HashSet<>();
-	
+	private String telefone;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "PERFIS")
 	private Set<Integer> perfis = new HashSet<>();
-		
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "cliente")
 	private List<Pedido> pedidos = new ArrayList<>();
 
 //	private String imageURL;
-	
+
 	public Cliente() {
 		addPerfil(Perfil.CLIENTE);
 	}
 
-	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo, String senha) {
+	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo, String senha,
+			String telefone) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -68,6 +67,7 @@ public class Cliente implements Serializable {
 		this.cpfOuCnpj = cpfOuCnpj;
 		this.tipo = (tipo == null) ? null : tipo.getCod();
 		this.senha = senha;
+		this.telefone = telefone;
 		addPerfil(Perfil.CLIENTE);
 	}
 
@@ -118,11 +118,11 @@ public class Cliente implements Serializable {
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
-	
-	public Set<Perfil> getPerfis(){
+
+	public Set<Perfil> getPerfis() {
 		return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
 	}
-	
+
 	public void addPerfil(Perfil perfil) {
 		perfis.add(perfil.getCod());
 	}
@@ -135,14 +135,14 @@ public class Cliente implements Serializable {
 		this.enderecos = enderecos;
 	}
 
-	public Set<String> getTelefones() {
-		return telefones;
+	public String getTelefone() {
+		return telefone;
 	}
 
-	public void setTelefones(Set<String> telefones) {
-		this.telefones = telefones;
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
-	
+
 	public List<Pedido> getPedidos() {
 		return pedidos;
 	}

@@ -1,6 +1,7 @@
 package com.rms2307.ecommerce.resources;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -31,6 +32,12 @@ public class PedidoResource {
 		Pedido obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
+	
+	@GetMapping
+	public ResponseEntity<List<Pedido>> findAll() {
+		List<Pedido> list = service.findAll();
+		return ResponseEntity.ok().body(list);
+	}
 
 	@PostMapping
 	public ResponseEntity<Void> insert(@Valid @RequestBody Pedido obj) {
@@ -39,7 +46,7 @@ public class PedidoResource {
 		return ResponseEntity.created(uri).build();
 	}
 
-	@GetMapping()
+	@GetMapping(value = "/page" )
 	public ResponseEntity<Page<Pedido>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
 			@RequestParam(value = "orderBy", defaultValue = "instante") String orderBy,

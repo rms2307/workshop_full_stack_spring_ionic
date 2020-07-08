@@ -23,8 +23,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rms2307.ecommerce.domain.Cliente;
+import com.rms2307.ecommerce.domain.Endereco;
 import com.rms2307.ecommerce.dto.ClienteDTO;
 import com.rms2307.ecommerce.dto.ClienteNewDTO;
+import com.rms2307.ecommerce.dto.EnderecoNewDTO;
 import com.rms2307.ecommerce.services.ClienteService;
 
 @RestController
@@ -71,6 +73,14 @@ public class ClienteResource {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
+	
+	@PostMapping(value = "/enderecos")
+	public ResponseEntity<Void> addEndereco(@Valid @RequestBody EnderecoNewDTO objDTO) {
+		Endereco obj = service.enderecoFromDTO(objDTO);
+		obj = service.addEndereco(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).build();
+	}
 
 	@PostMapping(value = "/picture")
 	public ResponseEntity<Void> uploadProfilePicture(@RequestParam(name = "file") MultipartFile file) {
@@ -85,11 +95,25 @@ public class ClienteResource {
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
 	}
+	
+	@PutMapping(value = "/enderecos/{id}")
+	public ResponseEntity<Void> updateEndereco(@Valid @RequestBody EnderecoNewDTO objDTO, @PathVariable Integer id) {
+		Endereco obj = service.enderecoFromDTO(objDTO);
+		obj.setId(id);
+		obj = service.updateEnd(obj);
+		return ResponseEntity.noContent().build();
+	}	
 
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		service.delete(id);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@DeleteMapping(value = "/enderecos/{id}")
+	public ResponseEntity<Void> deleteEndereco(@PathVariable Integer id) {
+		service.deleteEndereco(id);
 		return ResponseEntity.noContent().build();
 	}
 }
