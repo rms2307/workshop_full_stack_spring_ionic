@@ -9,9 +9,12 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +23,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rms2307.ecommerce.domain.Produto;
 import com.rms2307.ecommerce.dto.ProdutoDTO;
+import com.rms2307.ecommerce.dto.ProdutoNewDTO;
 import com.rms2307.ecommerce.resources.utils.URL;
 import com.rms2307.ecommerce.services.ProdutoService;
 
@@ -29,7 +33,7 @@ public class ProdutoResource {
 
 	@Autowired
 	private ProdutoService service;
-
+	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Produto> findById(@PathVariable Integer id) {
 		Produto obj = service.findById(id);
@@ -59,10 +63,25 @@ public class ProdutoResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> insert(@Valid @RequestBody Produto obj) {
-		obj = service.insert(obj);
+	public ResponseEntity<Void> insert(@Valid @RequestBody ProdutoNewDTO objDTO) {			
+		Produto obj = service.insert(objDTO);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
+	}
+	
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<Void> updateEndereco(@Valid @RequestBody ProdutoDTO objDTO, @PathVariable Integer id) {
+		objDTO.setId(id);
+		Produto obj = new Produto(objDTO.getId(), objDTO.getNome(), objDTO.getPreco());
+		obj = service.update(obj);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PreAuthorize("hasAnyRole('ADMIN')")
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> delete(@PathVariable Integer id) {
+		service.delete(id);
+		return ResponseEntity.noContent().build();
 	}
 
 }

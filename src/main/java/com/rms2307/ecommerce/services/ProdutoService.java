@@ -12,8 +12,12 @@ import org.springframework.stereotype.Service;
 
 import com.rms2307.ecommerce.domain.Categoria;
 import com.rms2307.ecommerce.domain.Produto;
+import com.rms2307.ecommerce.domain.enums.Perfil;
+import com.rms2307.ecommerce.dto.ProdutoNewDTO;
 import com.rms2307.ecommerce.repositories.CategoriaRepository;
 import com.rms2307.ecommerce.repositories.ProdutoRepository;
+import com.rms2307.ecommerce.security.UserSS;
+import com.rms2307.ecommerce.services.exceptions.AuthorizationException;
 import com.rms2307.ecommerce.services.exceptions.DataIntegrityException;
 import com.rms2307.ecommerce.services.exceptions.ObjectNotFoundException;
 
@@ -25,6 +29,9 @@ public class ProdutoService {
 
 	@Autowired
 	private CategoriaRepository categoriaRepository;
+	
+	@Autowired
+	private CategoriaService categoriaService;
 	
 	public List<Produto> findAll() {
 		return repo.findAll();
@@ -41,16 +48,26 @@ public class ProdutoService {
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Produto.class.getName()));
 	}
 
-	
-	public Produto insert(Produto obj) {
+	public Produto insert(ProdutoNewDTO objDTO) {
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Perfil.ADMIN)) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		Produto obj = new Produto(objDTO.getId(), objDTO.getNome(), objDTO.getPreco());
+		Categoria cat = categoriaService.findById(objDTO.getCategoria_id());
+		cat.getProdutos().add(obj);
+		obj.getCategorias().add(cat);
+		categoriaRepository.save(cat);
 		obj.setId(null);
 		obj = repo.save(obj);
-		System.out.println("============="+obj.getCategorias());
-		
 		return obj;
 	}
 
 	public Produto update(Produto obj) {
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Perfil.ADMIN)) {
+			throw new AuthorizationException("Acesso negado");
+		}
 		Produto newObj = findById(obj.getId());
 		updateData(newObj, obj);
 		return repo.save(newObj);
@@ -58,15 +75,19 @@ public class ProdutoService {
 
 	private void updateData(Produto newObj, Produto obj) {
 		newObj.setNome(obj.getNome());
+		newObj.setPreco(obj.getPreco());
 	}
 
 	public void delete(Integer id) {
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Perfil.ADMIN)) {
+			throw new AuthorizationException("Acesso negado");
+		}
 		findById(id);
-
 		try {
 			repo.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException("Produto com produtos");
+			throw new DataIntegrityException("Erro ao remover");
 		}
 	}
 
