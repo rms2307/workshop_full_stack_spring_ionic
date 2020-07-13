@@ -29,10 +29,10 @@ public class ProdutoService {
 
 	@Autowired
 	private CategoriaRepository categoriaRepository;
-	
+
 	@Autowired
 	private CategoriaService categoriaService;
-	
+
 	public List<Produto> findAll() {
 		return repo.findAll();
 	}
@@ -54,22 +54,31 @@ public class ProdutoService {
 			throw new AuthorizationException("Acesso negado");
 		}
 		Produto obj = new Produto(objDTO.getId(), objDTO.getNome(), objDTO.getPreco());
-		Categoria cat = categoriaService.findById(objDTO.getCategoria_id());
-		cat.getProdutos().add(obj);
-		obj.getCategorias().add(cat);
-		categoriaRepository.save(cat);
+		for (Integer cat_id : objDTO.getCategoria_id()) {
+			Categoria cat = categoriaService.findById(cat_id);
+			cat.getProdutos().add(obj);
+			obj.getCategorias().add(cat);
+			categoriaRepository.save(cat);
+		}
 		obj.setId(null);
 		obj = repo.save(obj);
 		return obj;
 	}
 
-	public Produto update(Produto obj) {
+	public Produto update(ProdutoNewDTO objDTO) {
 		UserSS user = UserService.authenticated();
 		if (user == null || !user.hasRole(Perfil.ADMIN)) {
 			throw new AuthorizationException("Acesso negado");
 		}
-		Produto newObj = findById(obj.getId());
+		Produto obj = new Produto(objDTO.getId(), objDTO.getNome(), objDTO.getPreco());
+		Produto newObj = findById(objDTO.getId());
 		updateData(newObj, obj);
+		for (Integer cat_id : objDTO.getCategoria_id()) {
+			Categoria cat = categoriaService.findById(cat_id);
+			cat.getProdutos().add(newObj);
+			newObj.getCategorias().add(cat);
+			categoriaRepository.save(cat);
+		}
 		return repo.save(newObj);
 	}
 

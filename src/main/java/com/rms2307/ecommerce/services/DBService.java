@@ -199,9 +199,9 @@ public class DBService {
 		categoriaRepository.saveAll(Arrays.asList(cat1, cat2, cat3, cat4, cat5, cat6, cat7, cat8));
 		produtoRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11));
 
-		produtoRepository.saveAll(Arrays.asList(p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26,
-				p27, p28, p29, p30, p31, p32, p34, p35, p36, p37, p38, p39, p40, p41, p42, p43, p44, p45, p46, p47, p48,
-				p49, p50));
+		produtoRepository.saveAll(Arrays.asList(p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25,
+				p26, p27, p28, p29, p30, p31, p32, p34, p35, p36, p37, p38, p39, p40, p41, p42, p43, p44, p45, p46, p47,
+				p48, p49, p50));
 
 		Estado est1 = new Estado(null, "Minas Gerais");
 		Estado est2 = new Estado(null, "São Paulo");
@@ -219,9 +219,9 @@ public class DBService {
 
 		Cliente cli1 = new Cliente(null, "Maria Silva", "moraes_rsilv@hotmail.com", "36378912377",
 				TipoCliente.PESSOAFISICA, pe.encode("@Feras"), "45118516");
-		
-		Cliente cli2 = new Cliente(null, "Marcia", "rms.app.teste@gmail.com", "31628382740",
-				TipoCliente.PESSOAFISICA, pe.encode("@Feras"), "954889297");
+
+		Cliente cli2 = new Cliente(null, "Marcia", "rms.app.teste@gmail.com", "31628382740", TipoCliente.PESSOAFISICA,
+				pe.encode("@Feras"), "954889297");
 		cli2.addPerfil(Perfil.ADMIN);
 
 		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 303", "Jardim América", "09234904", cli1, c1);
@@ -247,14 +247,14 @@ public class DBService {
 		Pagamento pagto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2017 00:00"),
 				null);
 		ped2.setPagamento(pagto2);
-		
+
 		Pagamento pagto3 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped3, 6);
 		ped3.setPagamento(pagto3);
 
 		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
-		cli2.getPedidos().addAll(Arrays.asList(ped3));		
+		cli2.getPedidos().addAll(Arrays.asList(ped3));
 
-		pedidoRepository.saveAll(Arrays.asList(ped1, ped2,ped3));
+		pedidoRepository.saveAll(Arrays.asList(ped1, ped2, ped3));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2, pagto3));
 
 		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
@@ -269,7 +269,7 @@ public class DBService {
 		p1.getItens().addAll(Arrays.asList(ip1));
 		p2.getItens().addAll(Arrays.asList(ip3));
 		p3.getItens().addAll(Arrays.asList(ip2));
-		p4.getItens().addAll(Arrays.asList(ip4));		
+		p4.getItens().addAll(Arrays.asList(ip4));
 
 		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3, ip4));
 	}

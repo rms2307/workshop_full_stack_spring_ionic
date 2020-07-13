@@ -46,7 +46,7 @@ public class ProdutoResource {
 		List<ProdutoDTO> listDTO = list.stream().map(obj -> new ProdutoDTO(obj)).collect(Collectors.toList());
 		return ResponseEntity.ok().body(listDTO);
 	}
-	
+		
 	@GetMapping(value = "/search")
 	public ResponseEntity<Page<ProdutoDTO>> findPage(
 			@RequestParam(value = "nome", defaultValue = "") String nome,
@@ -70,10 +70,9 @@ public class ProdutoResource {
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Void> updateEndereco(@Valid @RequestBody ProdutoDTO objDTO, @PathVariable Integer id) {
+	public ResponseEntity<Void> update(@Valid @RequestBody ProdutoNewDTO objDTO, @PathVariable Integer id) {
 		objDTO.setId(id);
-		Produto obj = new Produto(objDTO.getId(), objDTO.getNome(), objDTO.getPreco());
-		obj = service.update(obj);
+		service.update(objDTO);
 		return ResponseEntity.noContent().build();
 	}
 	
