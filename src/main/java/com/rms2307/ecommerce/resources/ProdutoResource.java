@@ -89,5 +89,11 @@ public class ProdutoResource {
 		URI uri = service.uploadPicture(file);
 		return ResponseEntity.created(uri).build();
 	}
+	
+	@PostMapping(value = "/picture/{id}")
+	public ResponseEntity<Void> uploadPictureUpdate(@RequestParam(name = "file") MultipartFile file, @PathVariable Integer id) {
+		URI uri = service.uploadPicture(file, id);
+		return ResponseEntity.created(uri).build();
+	}
 
 }

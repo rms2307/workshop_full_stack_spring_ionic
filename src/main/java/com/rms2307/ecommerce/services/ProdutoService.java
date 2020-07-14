@@ -95,6 +95,7 @@ public class ProdutoService {
 			newObj.getCategorias().add(cat);
 			categoriaRepository.save(cat);
 		}
+		
 		return repo.save(newObj);
 	}
 
@@ -131,6 +132,18 @@ public class ProdutoService {
 			throw new AuthorizationException("Acesso negado");
 		}
 		Integer produtoId = repo.produtoId();
+		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
+		jpgImage = imageService.cropSquare(jpgImage);
+		jpgImage = imageService.resize(jpgImage, size);
+		String fileName = prefix + produtoId + ".jpg";
+		return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
+	}
+	
+	public URI uploadPicture(MultipartFile multipartFile, Integer produtoId) {
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Perfil.ADMIN)) {
+			throw new AuthorizationException("Acesso negado");
+		}
 		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
 		jpgImage = imageService.cropSquare(jpgImage);
 		jpgImage = imageService.resize(jpgImage, size);

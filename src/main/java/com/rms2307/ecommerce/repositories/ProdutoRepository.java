@@ -24,6 +24,5 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
 
 	@Query(value = "SELECT MAX(ID) FROM PRODUTO", nativeQuery = true)
 	Integer produtoId();
-
 	
 }
