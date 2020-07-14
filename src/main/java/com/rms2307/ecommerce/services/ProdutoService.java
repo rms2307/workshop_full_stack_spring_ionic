@@ -1,14 +1,18 @@
 package com.rms2307.ecommerce.services;
 
+import java.awt.image.BufferedImage;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.rms2307.ecommerce.domain.Categoria;
 import com.rms2307.ecommerce.domain.Produto;
@@ -32,6 +36,18 @@ public class ProdutoService {
 
 	@Autowired
 	private CategoriaService categoriaService;
+	
+	@Autowired
+	private S3Service s3Service;
+	
+	@Autowired
+	private ImageService imageService;
+	
+	@Value("${img.prefix.produto}")
+	private String prefix;
+
+	@Value("${img.size}")
+	private Integer size;
 
 	public List<Produto> findAll() {
 		return repo.findAll();
@@ -106,5 +122,21 @@ public class ProdutoService {
 		List<Categoria> categorias = categoriaRepository.findAllById(ids);
 		return repo.findDistinctByNomeIgnoreCaseContainingAndCategoriasIn(nome, categorias, pageRequest);
 	}
+	
+//	IMAGENS
+	
+	public URI uploadPicture(MultipartFile multipartFile) {
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Perfil.ADMIN)) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		Integer produtoId = repo.produtoId();
+		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
+		jpgImage = imageService.cropSquare(jpgImage);
+		jpgImage = imageService.resize(jpgImage, size);
+		String fileName = prefix + produtoId + ".jpg";
+		return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
+	}
+	
 
 }

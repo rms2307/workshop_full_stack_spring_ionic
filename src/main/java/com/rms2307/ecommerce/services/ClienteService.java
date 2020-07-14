@@ -53,7 +53,7 @@ public class ClienteService {
 	@Value("${img.prefix.client.profile}")
 	private String prefix;
 
-	@Value("${img.profile.size}")
+	@Value("${img.size}")
 	private Integer size;
 
 	public Cliente findById(Integer id) {
@@ -104,10 +104,6 @@ public class ClienteService {
 		return obj;
 	}
 
-	public Endereco addEndereco(Endereco endereco) {
-		return enderecoRepository.save(endereco);
-	}
-
 	public Cliente update(Cliente obj) {
 		Cliente newObj = findById(obj.getId());
 		updateData(newObj, obj);
@@ -118,6 +114,35 @@ public class ClienteService {
 		newObj.setNome(obj.getNome());
 		newObj.setEmail(obj.getEmail());
 		newObj.setTelefone(obj.getTelefone());
+	}
+	
+	public void delete(Integer id) {
+		Cliente obj = findById(id);
+		try {
+			repo.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityException("O Cliente " + obj.getNome() + " contém pedidos.");
+		}
+	}
+	
+	public Cliente fromDTO(ClienteDTO objDTO) {
+		return new Cliente(objDTO.getId(), objDTO.getNome(), objDTO.getEmail(), null, null, null, objDTO.getTelefone());
+	}
+
+	public Cliente fromDTO(ClienteNewDTO objDTO) {
+		Cliente cli = new Cliente(null, objDTO.getNome(), objDTO.getEmail(), objDTO.getCpfOuCnpj(),
+				TipoCliente.toEnum(objDTO.getTipo()), pe.encode(objDTO.getSenha()), objDTO.getTelefone());
+		Cidade cid = new Cidade(objDTO.getCidadeId(), null, null);
+		Endereco end = new Endereco(null, objDTO.getLogradouro(), objDTO.getNumero(), objDTO.getComplemento(),
+				objDTO.getBairro(), objDTO.getCep(), cli, cid);
+		cli.getEnderecos().add(end);
+		return cli;
+	}
+	
+//	ENDEREÇOS
+	
+	public Endereco addEndereco(Endereco endereco) {
+		return enderecoRepository.save(endereco);
 	}
 	
 	public Endereco findEndById(Integer id) {
@@ -140,37 +165,13 @@ public class ClienteService {
 		newObj.setCep(obj.getCep());
 		newObj.setCidade(obj.getCidade());
 	}
-
-	public void delete(Integer id) {
-		Cliente obj = findById(id);
-		try {
-			repo.deleteById(id);
-		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException("O Cliente " + obj.getNome() + " contém pedidos.");
-		}
-	}
 	
 	public void deleteEndereco(Integer id) {
-		//Endereco obj = findEndById(id);
 		try {
 			enderecoRepository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException("O Endereço contém pedidos.");
+			throw new DataIntegrityException("Erro ao remover endereço");
 		}
-	}
-
-	public Cliente fromDTO(ClienteDTO objDTO) {
-		return new Cliente(objDTO.getId(), objDTO.getNome(), objDTO.getEmail(), null, null, null, objDTO.getTelefone());
-	}
-
-	public Cliente fromDTO(ClienteNewDTO objDTO) {
-		Cliente cli = new Cliente(null, objDTO.getNome(), objDTO.getEmail(), objDTO.getCpfOuCnpj(),
-				TipoCliente.toEnum(objDTO.getTipo()), pe.encode(objDTO.getSenha()), objDTO.getTelefone());
-		Cidade cid = new Cidade(objDTO.getCidadeId(), null, null);
-		Endereco end = new Endereco(null, objDTO.getLogradouro(), objDTO.getNumero(), objDTO.getComplemento(),
-				objDTO.getBairro(), objDTO.getCep(), cli, cid);
-		cli.getEnderecos().add(end);
-		return cli;
 	}
 
 	public Endereco enderecoFromDTO(EnderecoNewDTO objDTO) {
@@ -179,6 +180,8 @@ public class ClienteService {
 		return new Endereco(objDTO.getId(), objDTO.getLogradouro(), objDTO.getNumero(), objDTO.getComplemento(),
 				objDTO.getBairro(), objDTO.getCep(), cli, cid);
 	}
+	
+//	IMAGENS
 
 	public URI uploadProfilePicture(MultipartFile multipartFile) {
 		UserSS user = UserService.authenticated();

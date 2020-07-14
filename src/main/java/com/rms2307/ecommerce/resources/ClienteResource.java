@@ -74,20 +74,6 @@ public class ClienteResource {
 		return ResponseEntity.created(uri).build();
 	}
 	
-	@PostMapping(value = "/enderecos")
-	public ResponseEntity<Void> addEndereco(@Valid @RequestBody EnderecoNewDTO objDTO) {
-		Endereco obj = service.enderecoFromDTO(objDTO);
-		obj = service.addEndereco(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).build();
-	}
-
-	@PostMapping(value = "/picture")
-	public ResponseEntity<Void> uploadProfilePicture(@RequestParam(name = "file") MultipartFile file) {
-		URI uri = service.uploadProfilePicture(file);
-		return ResponseEntity.created(uri).build();
-	}
-
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Void> update(@Valid @RequestBody ClienteDTO objDTO, @PathVariable Integer id) {
 		Cliente obj = service.fromDTO(objDTO);
@@ -96,18 +82,36 @@ public class ClienteResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@PreAuthorize("hasAnyRole('ADMIN')")
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> delete(@PathVariable Integer id) {
+		service.delete(id);
+		return ResponseEntity.noContent().build();
+	}
+	
+//	IMAGENS
+	
+	@PostMapping(value = "/picture")
+	public ResponseEntity<Void> uploadProfilePicture(@RequestParam(name = "file") MultipartFile file) {
+		URI uri = service.uploadProfilePicture(file);
+		return ResponseEntity.created(uri).build();
+	}
+	
+// ENDEREÇOS
+	
+	@PostMapping(value = "/enderecos")
+	public ResponseEntity<Void> addEndereco(@Valid @RequestBody EnderecoNewDTO objDTO) {
+		Endereco obj = service.enderecoFromDTO(objDTO);
+		obj = service.addEndereco(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).build();
+	}
+	
 	@PutMapping(value = "/enderecos/{id}")
 	public ResponseEntity<Void> updateEndereco(@Valid @RequestBody EnderecoNewDTO objDTO, @PathVariable Integer id) {
 		Endereco obj = service.enderecoFromDTO(objDTO);
 		obj.setId(id);
 		obj = service.updateEnd(obj);
-		return ResponseEntity.noContent().build();
-	}	
-
-	@PreAuthorize("hasAnyRole('ADMIN')")
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Integer id) {
-		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 	
