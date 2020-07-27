@@ -25,6 +25,10 @@ import com.rms2307.ecommerce.domain.Categoria;
 import com.rms2307.ecommerce.dto.CategoriaDTO;
 import com.rms2307.ecommerce.services.CategoriaService;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RestController
 @RequestMapping(value = "/categorias")
 public class CategoriaResource {
@@ -32,6 +36,7 @@ public class CategoriaResource {
 	@Autowired
 	private CategoriaService service;
 
+	@ApiOperation(value = "Retorna todas categorias")
 	@GetMapping
 	public ResponseEntity<List<CategoriaDTO>> findAll() {
 		List<Categoria> list = service.findAll();
@@ -39,6 +44,7 @@ public class CategoriaResource {
 		return ResponseEntity.ok().body(listDTO);
 	}
 
+	@ApiOperation(value = "Retorna todas categorias com paginação")
 	@GetMapping(value = "/page")
 	public ResponseEntity<Page<CategoriaDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
@@ -49,12 +55,14 @@ public class CategoriaResource {
 		return ResponseEntity.ok().body(pagesDTO);
 	}
 
+	@ApiOperation(value = "Retorna uma categorias pelo Id")
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Categoria> findById(@PathVariable Integer id) {
 		Categoria obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 
+	@ApiOperation(value = "Insere uma categoria")
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO objDTO) {
@@ -64,6 +72,7 @@ public class CategoriaResource {
 		return ResponseEntity.created(uri).build();
 	}
 
+	@ApiOperation(value = "Atualiza uma categoria")
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO objDTO, @PathVariable Integer id) {
@@ -73,6 +82,10 @@ public class CategoriaResource {
 		return ResponseEntity.noContent().build();
 	}
 
+	@ApiOperation(value = "Remove uma categoria")
+	@ApiResponses(value = {
+			@ApiResponse(code = 400, message = "Não é possível excluir uma categoria que possui produtos"),
+			@ApiResponse(code = 404, message = "Código inexistente") })
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {

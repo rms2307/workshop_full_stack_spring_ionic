@@ -29,6 +29,8 @@ import com.rms2307.ecommerce.dto.ClienteNewDTO;
 import com.rms2307.ecommerce.dto.EnderecoNewDTO;
 import com.rms2307.ecommerce.services.ClienteService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping(value = "/clientes")
 public class ClienteResource {
@@ -36,19 +38,22 @@ public class ClienteResource {
 	@Autowired
 	private ClienteService service;
 
+	@ApiOperation(value = "Retorna um cliente pelo Id")
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Cliente> findById(@PathVariable Integer id) {
 		Cliente obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
-
+	
+	@ApiOperation(value = "Retorna todos os clientes")
 	@GetMapping
 	public ResponseEntity<List<ClienteDTO>> findAll() {
 		List<Cliente> list = service.findAll();
 		List<ClienteDTO> listDTO = list.stream().map(obj -> new ClienteDTO(obj)).collect(Collectors.toList());
 		return ResponseEntity.ok().body(listDTO);
 	}
-
+	
+	@ApiOperation(value = "Retorna um cliente pelo email")
 	@GetMapping(value = "/email")
 	public ResponseEntity<Cliente> findByEmail(@RequestParam(value = "value") String email) {
 		Cliente obj = service.findByEmail(email);
@@ -66,6 +71,7 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(pagesDTO);
 	}
 
+	@ApiOperation(value = "Insere um cliente")
 	@PostMapping
 	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDTO) {
 		Cliente obj = service.fromDTO(objDTO);
@@ -74,6 +80,7 @@ public class ClienteResource {
 		return ResponseEntity.created(uri).build();
 	}
 	
+	@ApiOperation(value = "Atualiza um cliente")
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Void> update(@Valid @RequestBody ClienteDTO objDTO, @PathVariable Integer id) {
 		Cliente obj = service.fromDTO(objDTO);
@@ -82,6 +89,7 @@ public class ClienteResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@ApiOperation(value = "Remove um cliente")
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
@@ -91,6 +99,7 @@ public class ClienteResource {
 	
 //	IMAGENS
 	
+	@ApiOperation(value = "Salva de profile")
 	@PostMapping(value = "/picture")
 	public ResponseEntity<Void> uploadProfilePicture(@RequestParam(name = "file") MultipartFile file) {
 		URI uri = service.uploadProfilePicture(file);
@@ -99,6 +108,7 @@ public class ClienteResource {
 	
 // ENDEREÇOS
 	
+	@ApiOperation(value = "Insere o endereço")
 	@PostMapping(value = "/enderecos")
 	public ResponseEntity<Void> addEndereco(@Valid @RequestBody EnderecoNewDTO objDTO) {
 		Endereco obj = service.enderecoFromDTO(objDTO);
@@ -107,6 +117,7 @@ public class ClienteResource {
 		return ResponseEntity.created(uri).build();
 	}
 	
+	@ApiOperation(value = "Atualiza o endereço")
 	@PutMapping(value = "/enderecos/{id}")
 	public ResponseEntity<Void> updateEndereco(@Valid @RequestBody EnderecoNewDTO objDTO, @PathVariable Integer id) {
 		Endereco obj = service.enderecoFromDTO(objDTO);
@@ -115,6 +126,7 @@ public class ClienteResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@ApiOperation(value = "Deleta o endereço")
 	@DeleteMapping(value = "/enderecos/{id}")
 	public ResponseEntity<Void> deleteEndereco(@PathVariable Integer id) {
 		service.deleteEndereco(id);

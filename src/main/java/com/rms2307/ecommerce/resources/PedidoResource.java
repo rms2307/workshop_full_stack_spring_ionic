@@ -20,6 +20,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.rms2307.ecommerce.domain.Pedido;
 import com.rms2307.ecommerce.services.PedidoService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping(value = "/pedidos")
 public class PedidoResource {
@@ -27,18 +29,21 @@ public class PedidoResource {
 	@Autowired
 	private PedidoService service;
 
+	@ApiOperation(value = "Retorna um pedido pelo Id")
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Pedido> findById(@PathVariable Integer id) {
 		Pedido obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
+	@ApiOperation(value = "Retorna todos pedidos")
 	@GetMapping
 	public ResponseEntity<List<Pedido>> findAll() {
 		List<Pedido> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 
+	@ApiOperation(value = "Insere um pedido")
 	@PostMapping
 	public ResponseEntity<Void> insert(@Valid @RequestBody Pedido obj) {
 		obj = service.insert(obj);
@@ -46,6 +51,7 @@ public class PedidoResource {
 		return ResponseEntity.created(uri).build();
 	}
 
+	@ApiOperation(value = "Retorna todos os pedidos paginados")
 	@GetMapping(value = "/page" )
 	public ResponseEntity<Page<Pedido>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,

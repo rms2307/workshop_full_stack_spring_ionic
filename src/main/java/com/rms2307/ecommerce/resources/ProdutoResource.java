@@ -28,6 +28,8 @@ import com.rms2307.ecommerce.dto.ProdutoNewDTO;
 import com.rms2307.ecommerce.resources.utils.URL;
 import com.rms2307.ecommerce.services.ProdutoService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping(value = "/produtos")
 public class ProdutoResource {
@@ -35,12 +37,14 @@ public class ProdutoResource {
 	@Autowired
 	private ProdutoService service;
 	
+	@ApiOperation(value = "Retorna um produto pelo Id")
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Produto> findById(@PathVariable Integer id) {
 		Produto obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
+	@ApiOperation(value = "Retorna todos os produtos")
 	@GetMapping
 	public ResponseEntity<List<ProdutoDTO>> findAll() {
 		List<Produto> list = service.findAll();
@@ -48,6 +52,7 @@ public class ProdutoResource {
 		return ResponseEntity.ok().body(listDTO);
 	}
 		
+	@ApiOperation(value = "Retorna produtos paginados")
 	@GetMapping(value = "/search")
 	public ResponseEntity<Page<ProdutoDTO>> findPage(
 			@RequestParam(value = "nome", defaultValue = "") String nome,
@@ -63,6 +68,7 @@ public class ProdutoResource {
 		return ResponseEntity.ok().body(pagesDTO);
 	}
 	
+	@ApiOperation(value = "Insere um produto")
 	@PostMapping
 	public ResponseEntity<Void> insert(@Valid @RequestBody ProdutoNewDTO objDTO) {			
 		Produto obj = service.insert(objDTO);
@@ -70,6 +76,7 @@ public class ProdutoResource {
 		return ResponseEntity.created(uri).build();
 	}
 	
+	@ApiOperation(value = "Atualiza um produto")
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Void> update(@Valid @RequestBody ProdutoNewDTO objDTO, @PathVariable Integer id) {
 		objDTO.setId(id);
@@ -77,6 +84,7 @@ public class ProdutoResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@ApiOperation(value = "Remove um produto")
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
@@ -84,12 +92,14 @@ public class ProdutoResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@ApiOperation(value = "Insere imagem de um produto")
 	@PostMapping(value = "/picture")
 	public ResponseEntity<Void> uploadPicture(@RequestParam(name = "file") MultipartFile file) {
 		URI uri = service.uploadPicture(file);
 		return ResponseEntity.created(uri).build();
 	}
 	
+	@ApiOperation(value = "Atualiza imagem de um produto pelo Id")
 	@PostMapping(value = "/picture/{id}")
 	public ResponseEntity<Void> uploadPictureUpdate(@RequestParam(name = "file") MultipartFile file, @PathVariable Integer id) {
 		URI uri = service.uploadPicture(file, id);

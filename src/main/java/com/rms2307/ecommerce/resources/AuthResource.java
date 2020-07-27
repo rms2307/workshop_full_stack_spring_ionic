@@ -16,6 +16,8 @@ import com.rms2307.ecommerce.security.UserSS;
 import com.rms2307.ecommerce.services.AuthService;
 import com.rms2307.ecommerce.services.UserService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping(value = "/auth")
 public class AuthResource {
@@ -35,6 +37,7 @@ public class AuthResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@ApiOperation(value = "Esqueci a senha")
 	@PostMapping(value = "/forgot")
 	public ResponseEntity<Void> forgot(@Valid @RequestBody EmailDTO objDTO) {
 		service.sendNewPassword(objDTO.getEmail());
