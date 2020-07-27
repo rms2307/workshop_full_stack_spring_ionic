@@ -8,7 +8,6 @@ public class EnderecoNewDTO {
 	private String logradouro;
 	@NotEmpty(message = "Campo Obrigatório")
 	private String numero;
-	@NotEmpty(message = "Campo Obrigatório")
 	private String complemento;
 	@NotEmpty(message = "Campo Obrigatório")
 	private String bairro;
