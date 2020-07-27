@@ -95,7 +95,6 @@ public class ProdutoService {
 			newObj.getCategorias().add(cat);
 			categoriaRepository.save(cat);
 		}
-		
 		return repo.save(newObj);
 	}
 
